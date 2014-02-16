@@ -13,12 +13,10 @@ setwd('/Users/nhayes-roth/Dropbox/Workspace/DraftWizard/')
 POSITIONS = c('c', 'b1', 'b2', 'b3', 'ss', 'of')
 STATS_B = c('R', 'HR', 'RBI', 'SB', 'AVG', 'OPS')
 STATS_P = c('K', 'W', 'SV', 'BAA', 'ERA', 'WHIP')
-WEIGHTS_B = c(1, 1, 1, 1, 1, 1)
-WEIGHTS_P = c(1, 1, 1, 1, 1, 1)
 MIN_AB = 250	# limit the data to relevant players
 WORKING_DIRECTORY = getwd()
 PROJECTIONS_DIRECTORY = paste(WORKING_DIRECTORY, sep='/', "Projections/")
-# source(paste(WORKING_DIRECTORY, sep='/', 'Functions.R'))
+source(paste(WORKING_DIRECTORY, sep='/', 'Functions.R'))
 
 ######################
 # Load projections from .csv
@@ -51,82 +49,37 @@ ss = cbind(ss, Position = 'ss')
 of = cbind(of, Position = 'of')
 
 ######################
-# Build utility data frame
-######################
-util = merge(b2, b1, all=TRUE)
-util = merge(util, c, all=TRUE)
-util = merge(util, b3, all=TRUE)
-util = merge(util, ss, all=TRUE)
-util = merge(util, of, all=TRUE)
-
-##################################################################
 # Calculate values
-##################################################################
-stats = matrix(nrow=length(STATS_B)+2, ncol=2, 
-			   dimnames=list(c(STATS_B, "wAVG", "wOPS"), c("Mean", "SD")))
-
 ######################
-# Catcher
-######################
-replacement = 13
-# mean
-stats[1,1] = mean(c$R)
-stats[2,1] = mean(c$HR)
-stats[3,1] = mean(c$RBI)
-stats[4,1] = mean(c$SB)
-stats[5,1] = mean(c$AVG)
-stats[6,1] = mean(c$OPS)
-# standard deviation
-stats[1,2] = sd(c$R)
-stats[2,2] = sd(c$HR)
-stats[3,2] = sd(c$RBI)
-stats[4,2] = sd(c$SB)
-stats[5,2] = sd(c$AVG)
-stats[6,2] = sd(c$OPS)
-# z-scores
-c = cbind(c, zR  =(c$R  -stats[1,1])/stats[1,2])
-c = cbind(c, zHR =(c$HR -stats[2,1])/stats[2,2])
-c = cbind(c, zRBI=(c$RBI-stats[3,1])/stats[3,2])
-c = cbind(c, zSB =(c$SB -stats[4,1])/stats[4,2])
-c = cbind(c, zAVG=(c$AVG-stats[5,1])/stats[5,2])
-c = cbind(c, zOPS=(c$OPS-stats[6,1])/stats[6,2])
-# weighted AVG and OPS
-c = cbind(c, wAVG=(c$zAVG*c$AB))
-c = cbind(c, wOPS=(c$zOPS*c$AB))
-stats[7,1] = mean(c$wAVG)
-stats[8,1] = mean(c$wOPS)
-stats[7,2] = sd(c$wAVG)
-stats[8,2] = sd(c$wOPS)
-c = cbind(c, zwAVG=(c$wAVG-stats[7,1])/stats[7,2])
-c = cbind(c, zwOPS=(c$wOPS-stats[8,1])/stats[8,2])
-# value
-c = cbind(Val=(c$zR+c$zHR+c$zRBI+c$zSB+c$zwAVG+c$zwOPS), c)
+c = calculateBatterValue(c, 13)
+b1 = calculateBatterValue(b1, 24)
+b2 = calculateBatterValue(b2, 19)
+b3 = calculateBatterValue(b3, 18)
+ss = calculateBatterValue(ss, 17)
+of = calculateBatterValue(of, 63)
 
-
-
-
-# first
-replacement = 24
-# second
-replacement = 19
-# third
-replacement = 18
-# shortstop
-replacement = 17
-# outfield
-replacement = 63
+# TODO: pitchers
 # starting pitcher
 replacement = 63
 # relief pitcher
 replacement = 37
 
 ######################
+# Rank all hiters
+######################
+
+
+######################
 # Cleanup
 ######################
 
 ######################
-# Add VAR for each position
+# Write results to csv file(s)
 ######################
-# capture.output('test', file='test.txt')
-# capture.output(commandArgs(trailingOnly = TRUE)[1], file='pwd.txt')
-
+util = merge(b2, b1, all=TRUE)
+util = merge(util, c, all=TRUE)
+util = merge(util, b3, all=TRUE)
+util = merge(util, ss, all=TRUE)
+util = merge(util, of, all=TRUE)
+util = util[order(-util$Val),]
+write.csv(util, file='batters.csv')
