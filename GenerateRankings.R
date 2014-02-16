@@ -62,8 +62,8 @@ util = merge(util, of, all=TRUE)
 ##################################################################
 # Calculate values
 ##################################################################
-stats = matrix(nrow=length(STATS_B), ncol=2, 
-			   dimnames=list(STATS_B, c("Mean", "SD")))
+stats = matrix(nrow=length(STATS_B)+2, ncol=2, 
+			   dimnames=list(c(STATS_B, "wAVG", "wOPS"), c("Mean", "SD")))
 
 ######################
 # Catcher
@@ -90,7 +90,20 @@ c = cbind(c, zRBI=(c$RBI-stats[3,1])/stats[3,2])
 c = cbind(c, zSB =(c$SB -stats[4,1])/stats[4,2])
 c = cbind(c, zAVG=(c$AVG-stats[5,1])/stats[5,2])
 c = cbind(c, zOPS=(c$OPS-stats[6,1])/stats[6,2])
-# weighing AVG and OPS
+# weighted AVG and OPS
+c = cbind(c, wAVG=(c$zAVG*c$AB))
+c = cbind(c, wOPS=(c$zOPS*c$AB))
+stats[7,1] = mean(c$wAVG)
+stats[8,1] = mean(c$wOPS)
+stats[7,2] = sd(c$wAVG)
+stats[8,2] = sd(c$wOPS)
+c = cbind(c, zwAVG=(c$wAVG-stats[7,1])/stats[7,2])
+c = cbind(c, zwOPS=(c$wOPS-stats[8,1])/stats[8,2])
+# value
+c = cbind(Val=(c$zR+c$zHR+c$zRBI+c$zSB+c$zwAVG+c$zwOPS), c)
+
+
+
 
 # first
 replacement = 24
