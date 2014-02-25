@@ -13,9 +13,11 @@ Execute the program:
 `make run`
 
 *Note: this program requires Java and R to be installed on your machine.*
+
 What's next?
 --
 - Pitchers
+- Factor in kept players
 - Automatically download data
 - Command-line interface
 - Select statistics
