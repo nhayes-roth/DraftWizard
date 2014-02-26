@@ -16,10 +16,12 @@ Execute the program:
 
 What's next?
 --
+1. GenerateRankings.R
 - Pitchers
 - Factor in kept players
-- Automatically download data
-- Command-line interface
-- Select statistics
+2. DraftWizard.py
+- Automatically download data from web
 - Select data source(s)
-- Add functionality/aesthetics to results
+3. Rankings.xlsx
+- Automatically populate from resulting .csv file(s)
+- Actual draft day functions (assign to team, remove from pop, etc.)
