@@ -25,3 +25,5 @@ What's next?
 3. Rankings.xlsx
 - Automatically populate from resulting .csv file(s)
 - Actual draft day functions (assign to team, remove from pop, etc.)
+4. README.md
+- Add explanation of statistical techniques 
