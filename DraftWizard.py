@@ -114,12 +114,24 @@ def removePosition(position):
 	else:
 		chosen.discard(position)
 
-def main():
-	setup()
+def downloadProjections():
+	global chosen
 	for pos in chosen:
-		urllib.urlretrieve(url_prefix+pos+url_suffix, './projections/projection-'+pos+'.csv')
+		print "Downloading", pos, "data from", url_prefix+pos+url_suffix+'...'
+		response = urllib2.urlopen(url_prefix+pos+url_suffix)
+		output = open('./projections/projection-'+pos+'.xls', 'wb')
+		output.write(response.read())
+		output.close()
+		print "Done"
+
+def runRScript():
 	# run the R script as a subprocess
 	subprocess.call("Rscript GenerateRankings.R --args arg1 arg2", shell=True)
+
+def main():
+	setup()
+	downloadProjections()
+	runRScript()
 	print "success"
 
 if __name__ == '__main__':
