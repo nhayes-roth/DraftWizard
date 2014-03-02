@@ -123,17 +123,17 @@ def downloadProjections():
 		output = open('./projections/projections-'+pos+'.csv', 'wb')
 		output.write(response.read())
 		output.close()
-		print "Done"
 
 def runRScript():
 	# run the R script as a subprocess
+	print "Generating rankings in R..."
 	subprocess.call("Rscript GenerateRankings.R --args arg1 arg2", shell=True)
 
 def main():
 	setup()
 	downloadProjections()
 	runRScript()
-	print "success"
+	print "Done!"
 
 if __name__ == '__main__':
     main()
