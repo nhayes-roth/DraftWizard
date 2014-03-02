@@ -11,6 +11,7 @@ import mechanize
 import urllib
 import urllib2
 import csv
+import xlrd
 
 
 #############################
@@ -119,7 +120,7 @@ def downloadProjections():
 	for pos in chosen:
 		print "Downloading", pos, "data from", url_prefix+pos+url_suffix+'...'
 		response = urllib2.urlopen(url_prefix+pos+url_suffix)
-		output = open('./projections/projection-'+pos+'.xls', 'wb')
+		output = open('./projections/projections-'+pos+'.csv', 'wb')
 		output.write(response.read())
 		output.close()
 		print "Done"

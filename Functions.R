@@ -3,19 +3,19 @@
 
 calculateBatterValue = function(data, replacement_level){
 	# z-scores
-	data = cbind(data, zR  =(data$R   - mean(data$R))   / sd(data$R))
-	data = cbind(data, zHR =(data$HR  - mean(data$HR))  / sd(data$HR))
-	data = cbind(data, zRBI=(data$RBI - mean(data$RBI)) / sd(data$RBI))
-	data = cbind(data, zSB =(data$SB  - mean(data$SB))  / sd(data$SB))
-	data = cbind(data, zAVG=(data$AVG - mean(data$AVG)) / sd(data$AVG))
-	data = cbind(data, zOPS=(data$OPS - mean(data$OPS)) / sd(data$OPS))
-	# weighted AVG and OPS
-	data = cbind(data, wAVG=(data$zAVG*data$AB))
-	data = cbind(data, wOPS=(data$zOPS*data$AB))
-	data = cbind(data, zwAVG=(data$wAVG - mean(data$wAVG)) / sd(data$wAVG))
-	data = cbind(data, zwOPS=(data$wOPS - mean(data$wOPS)) / sd(data$wOPS))
+	data = cbind(data, zR  =(data$runs   - mean(data$runs))   / sd(data$runs))
+	data = cbind(data, zhrs =(data$hrs  - mean(data$hrs))  / sd(data$hrs))
+	data = cbind(data, zrbi=(data$rbi - mean(data$rbi)) / sd(data$rbi))
+	data = cbind(data, zsb =(data$sb  - mean(data$sb))  / sd(data$sb))
+	data = cbind(data, zave=(data$ave - mean(data$ave)) / sd(data$ave))
+	data = cbind(data, zops=(data$ops - mean(data$ops)) / sd(data$ops))
+	# weighted ave and ops
+	data = cbind(data, wave=(data$zave*data$ab))
+	data = cbind(data, wops=(data$zops*data$ab))
+	data = cbind(data, zwave=(data$wave - mean(data$wave)) / sd(data$wave))
+	data = cbind(data, zwops=(data$wops - mean(data$wops)) / sd(data$wops))
 	# value
-	data = cbind(Val=(data$zR+data$zHR+data$zRBI+data$zSB+data$zwAVG+data$zwOPS), data)
+	data = cbind(Val=(data$zR+data$zhrs+data$zrbi+data$zsb+data$zwave+data$zwops), data)
 	# sort by Value
 	data = data[order(-data$Val),]
 	# adjust by replacement value
