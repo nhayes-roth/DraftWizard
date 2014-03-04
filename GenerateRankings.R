@@ -28,6 +28,16 @@ content = content[-1]
 hitters = read.csv(textConnection(content), sep='\t')
 rownames(hitters) = hitters[,1]
 
+# Remove keepers
+######################
+keepers = read.table('./Keepers/keepers.txt', sep = ',')
+indexes = gregexpr(pattern = ' ', keepers$V2)
+for (name in keepers$V1){
+	if (name %in% hitters$Player.Name){
+		hitters = subset(hitters, hitters$Player.Name != name)
+	}
+}
+
 # Separate by position for calculations
 ######################
 # catchers
@@ -90,6 +100,16 @@ content = content[-1]
 pitchers = read.csv(textConnection(content), sep='\t')
 rownames(pitchers) = pitchers[,1]
 
+# Remove keepers
+######################
+keepers = read.table('./Keepers/keepers.txt', sep = ',')
+indexes = gregexpr(pattern = ' ', keepers$V2)
+for (name in keepers$V1){
+	if (name %in% pitchers$Player.Name){
+		pitchers = subset(pitchers, pitchers$Player.Name != name)
+	}
+}
+
 # Separate by position for calculations
 ######################
 # SP
@@ -108,8 +128,8 @@ rp = rp[rp$sv>MIN_SV | rp$k>MIN_K,]
 
 # Calculate values
 ######################
-sp = rankPitchers(sp, 64, 0.8)
-rp = rankPitchers(rp, 37, 0.5)
+sp = rankPitchers(sp, 64, 0.7)
+rp = rankPitchers(rp, 37, 0.4)
 
 # Merge results
 ######################
